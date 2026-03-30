@@ -11,17 +11,17 @@ Este repositorio implementa la interfaz “Around The U.S.” siguiendo un dise�
 - Diseño responsivo basado en HTML5 + CSS3.
 - Estilos modulares por bloques (BEM) e importados desde [pages/index.css](./pages/index.css).
 - Galería de tarjetas renderizada con JavaScript a partir de un array inicial de datos.
-- Estructura preparada para interactividad con ventanas emergentes:
-  - Edición de perfil.
-  - Creación de nuevas tarjetas.
-  - Vista ampliada de imagen.
+- Ventanas emergentes (popups) incluidas en el DOM:
+  - Edición de perfil (funcional).
+  - Creación de nuevas tarjetas (pendiente de JS).
+  - Vista ampliada de imagen (pendiente de JS).
 - Marcado con atributos `aria-label` en botones para mejorar accesibilidad.
 
-## Estado actual (Sprint 6 · Etapa 1)
+## Estado actual (Sprint 6 · Etapa 2)
 
 - Las tarjetas se generan dinámicamente desde `initialCards` en [scripts/index.js](./scripts/index.js).
 - El HTML ya no contiene tarjetas hardcodeadas dentro de `.cards__list`, lo que facilita el mantenimiento y el escalado.
-- Los popups están presentes en el DOM y listos para conectarse con JavaScript en siguientes etapas.
+- El modal “Editar perfil” abre/cierra con sus botones y permite actualizar Nombre y Acerca de mí desde el formulario.
 
 ## Tecnologías y herramientas
 
@@ -82,8 +82,6 @@ Esto permite que la UI se construya desde datos, preparando el camino para:
 
 ## Roadmap (siguientes mejoras)
 
-- Abrir/cerrar popups desde botones (“Editar”, “Agregar”, cerrar con X).
-- Editar nombre y descripción del perfil desde el formulario.
 - Crear nuevas tarjetas desde el formulario “Nuevo lugar”.
 - Like/Unlike y eliminación de tarjetas.
 - Vista ampliada de imagen al hacer clic en una tarjeta.

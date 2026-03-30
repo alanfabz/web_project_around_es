@@ -62,3 +62,39 @@ function createCardElement({ name, link }) {
 initialCards.forEach((cardData) => {
   cardsList.append(createCardElement(cardData));
 });
+
+const editProfilePopup = document.querySelector("#edit-popup");
+const editProfileButton = document.querySelector(".profile__edit-button");
+const editProfileCloseButton = editProfilePopup.querySelector(".popup__close");
+const editProfileForm = editProfilePopup.querySelector("#edit-profile-form");
+const nameInput = editProfileForm.elements.name;
+const descriptionInput = editProfileForm.elements.description;
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
+
+function openPopup(popupElement) {
+  popupElement.classList.add("popup_is-opened");
+}
+
+function closePopup(popupElement) {
+  popupElement.classList.remove("popup_is-opened");
+}
+
+function handleEditProfileOpen() {
+  nameInput.value = profileTitle.textContent;
+  descriptionInput.value = profileDescription.textContent;
+  openPopup(editProfilePopup);
+}
+
+function handleEditProfileFormSubmit(evt) {
+  evt.preventDefault();
+  profileTitle.textContent = nameInput.value;
+  profileDescription.textContent = descriptionInput.value;
+  closePopup(editProfilePopup);
+}
+
+editProfileButton.addEventListener("click", handleEditProfileOpen);
+editProfileCloseButton.addEventListener("click", () =>
+  closePopup(editProfilePopup),
+);
+editProfileForm.addEventListener("submit", handleEditProfileFormSubmit);
