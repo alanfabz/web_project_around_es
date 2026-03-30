@@ -88,4 +88,4 @@ Esto permite que la UI se construya desde datos, preparando el camino para:
 
 ## Autor
 
-- Alan Fabz
+- Alan Lozano
