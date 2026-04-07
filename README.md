@@ -2,6 +2,10 @@
 
 Proyecto frontend donde una página estática se transforma en una experiencia interactiva: perfil de usuario, galería de tarjetas con fotografías y ventanas emergentes (popups) para editar/agregar contenido.
 
+## Demo
+
+- GitHub Pages: https://alanfabz.github.io/web_project_around_es/
+
 ## Descripción
 
 Este repositorio implementa la interfaz “Around The U.S.” siguiendo un diseño dado, con estilos organizados bajo metodología BEM y una base de JavaScript que permite renderizar dinámicamente tarjetas desde un array de datos.
@@ -10,18 +14,27 @@ Este repositorio implementa la interfaz “Around The U.S.” siguiendo un dise�
 
 - Diseño responsivo basado en HTML5 + CSS3.
 - Estilos modulares por bloques (BEM) e importados desde [pages/index.css](./pages/index.css).
-- Galería de tarjetas renderizada con JavaScript a partir de un array inicial de datos.
-- Ventanas emergentes (popups) incluidas en el DOM:
+- Galería de tarjetas renderizada con JavaScript a partir de un array inicial de datos y un `<template>` HTML.
+- Ventanas emergentes (popups):
   - Edición de perfil (funcional).
-  - Creación de nuevas tarjetas (pendiente de JS).
-  - Vista ampliada de imagen (pendiente de JS).
+  - Creación de nuevas tarjetas (funcional).
+  - Vista ampliada de imagen (funcional).
+- Interacciones por tarjeta:
+  - Like/Unlike con cambio visual.
+  - Eliminación de tarjetas del DOM.
+  - Apertura de imagen ampliada en modal al hacer clic en la foto.
+- Manejo de datos incompletos con valores por defecto:
+  - Nombre: `"Sin título"`.
+  - Imagen: `"./images/placeholder.jpg"`.
 - Marcado con atributos `aria-label` en botones para mejorar accesibilidad.
 
-## Estado actual (Sprint 6 · Etapa 2)
+## Estado actual (Sprint 6 · Etapa final)
 
-- Las tarjetas se generan dinámicamente desde `initialCards` en [scripts/index.js](./scripts/index.js).
-- El HTML ya no contiene tarjetas hardcodeadas dentro de `.cards__list`, lo que facilita el mantenimiento y el escalado.
-- El modal “Editar perfil” abre/cierra con sus botones y permite actualizar Nombre y Acerca de mí desde el formulario.
+- Las tarjetas iniciales se generan dinámicamente desde `initialCards` usando el `<template id="card-template">`.
+- El HTML no contiene tarjetas hardcodeadas dentro de `.cards__list`.
+- El modal “Editar perfil” abre/cierra y actualiza Nombre y Acerca de mí desde el formulario.
+- El modal “Nuevo lugar” abre/cierra y agrega una tarjeta como primer elemento en el contenedor.
+- El modal de imagen muestra la versión ampliada de la tarjeta seleccionada.
 
 ## Tecnologías y herramientas
 
@@ -70,21 +83,18 @@ http://localhost:8080
 El render inicial se hace:
 
 - Declarando un array de objetos `{ name, link }`.
-- Creando cada tarjeta con `document.createElement(...)` y asignando clases BEM.
-- Insertando los elementos en el contenedor `.cards__list`.
+- Clonando una tarjeta desde un `<template>` y asignando contenido/atributos antes de insertarla en el DOM.
+- Insertando las tarjetas con `prepend(...)` para que lo más reciente quede arriba.
 
-Esto permite que la UI se construya desde datos, preparando el camino para:
+Además:
 
-- agregar nuevas tarjetas desde formularios,
-- eliminar tarjetas,
-- gestionar likes,
-- y abrir la vista ampliada de imagen.
+- `getCardElement()` utiliza parámetros predeterminados para tolerar datos incompletos.
+- Los listeners de like/eliminar/abrir imagen se asignan al crear cada tarjeta.
 
 ## Roadmap (siguientes mejoras)
 
-- Crear nuevas tarjetas desde el formulario “Nuevo lugar”.
-- Like/Unlike y eliminación de tarjetas.
-- Vista ampliada de imagen al hacer clic en una tarjeta.
+- Persistencia de tarjetas/likes (requiere back-end).
+- Validación de formularios y UX adicional (p. ej., cerrar con Escape/overlay).
 
 ## Autor
 
