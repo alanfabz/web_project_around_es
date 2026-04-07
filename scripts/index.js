@@ -25,76 +25,121 @@ const initialCards = [
   },
 ];
 
+const cardTemplate = document.querySelector("#card-template").content;
 const cardsList = document.querySelector(".cards__list");
 
-function createCardElement({ name, link }) {
-  const cardElement = document.createElement("li");
-  cardElement.classList.add("card");
+const editProfilePopup = document.querySelector("#edit-popup");
+const newCardPopup = document.querySelector("#new-card-popup");
+const imagePopup = document.querySelector("#image-popup");
 
-  const imageElement = document.createElement("img");
-  imageElement.classList.add("card__image");
-  imageElement.src = link;
-  imageElement.alt = name;
+const editProfileButton = document.querySelector(".profile__edit-button");
+const addCardButton = document.querySelector(".profile__add-button");
 
-  const deleteButton = document.createElement("button");
-  deleteButton.classList.add("card__delete-button");
-  deleteButton.type = "button";
-  deleteButton.setAttribute("aria-label", "Eliminar tarjeta");
+const editProfileCloseButton = editProfilePopup.querySelector(".popup__close");
+const newCardCloseButton = newCardPopup.querySelector(".popup__close");
+const imagePopupCloseButton = imagePopup.querySelector(".popup__close");
 
-  const descriptionElement = document.createElement("div");
-  descriptionElement.classList.add("card__description");
+const editProfileForm = editProfilePopup.querySelector("#edit-profile-form");
+const newCardForm = newCardPopup.querySelector("#new-card-form");
 
-  const titleElement = document.createElement("h2");
-  titleElement.classList.add("card__title");
-  titleElement.textContent = name;
+const nameInput = editProfileForm.elements.name;
+const descriptionInput = editProfileForm.elements.description;
+const cardNameInput = newCardForm.elements["place-name"];
+const cardLinkInput = newCardForm.elements.link;
 
-  const likeButton = document.createElement("button");
-  likeButton.classList.add("card__like-button");
-  likeButton.type = "button";
-  likeButton.setAttribute("aria-label", "Botón Me gusta");
+const profileTitle = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
 
-  descriptionElement.append(titleElement, likeButton);
-  cardElement.append(imageElement, deleteButton, descriptionElement);
+const imagePopupImage = imagePopup.querySelector(".popup__image");
+const imagePopupCaption = imagePopup.querySelector(".popup__caption");
+
+function openModal(modalElement) {
+  modalElement.classList.add("popup_is-opened");
+}
+
+function closeModal(modalElement) {
+  modalElement.classList.remove("popup_is-opened");
+}
+
+function handleLikeButtonClick(evt) {
+  evt.target.classList.toggle("card__like-button_is-active");
+}
+
+function handleDeleteButtonClick(cardElement) {
+  cardElement.remove();
+}
+
+function handleCardImageClick(name, link) {
+  imagePopupCaption.textContent = name;
+  imagePopupImage.src = link;
+  imagePopupImage.alt = name;
+  openModal(imagePopup);
+}
+
+function getCardElement(
+  name = "Sin título",
+  link = "./images/placeholder.jpg",
+) {
+  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+  const cardTitle = cardElement.querySelector(".card__title");
+  const cardImage = cardElement.querySelector(".card__image");
+  const likeButton = cardElement.querySelector(".card__like-button");
+  const deleteButton = cardElement.querySelector(".card__delete-button");
+
+  cardTitle.textContent = name;
+  cardImage.src = link;
+  cardImage.alt = name;
+
+  likeButton.addEventListener("click", handleLikeButtonClick);
+  deleteButton.addEventListener("click", () =>
+    handleDeleteButtonClick(cardElement),
+  );
+  cardImage.addEventListener("click", () => handleCardImageClick(name, link));
 
   return cardElement;
 }
 
+function renderCard(name, link, container) {
+  const cardElement = getCardElement(name, link);
+  container.prepend(cardElement);
+}
+
 initialCards.forEach((cardData) => {
-  cardsList.append(createCardElement(cardData));
+  renderCard(cardData.name, cardData.link, cardsList);
 });
-
-const editProfilePopup = document.querySelector("#edit-popup");
-const editProfileButton = document.querySelector(".profile__edit-button");
-const editProfileCloseButton = editProfilePopup.querySelector(".popup__close");
-const editProfileForm = editProfilePopup.querySelector("#edit-profile-form");
-const nameInput = editProfileForm.elements.name;
-const descriptionInput = editProfileForm.elements.description;
-const profileTitle = document.querySelector(".profile__title");
-const profileDescription = document.querySelector(".profile__description");
-
-function openPopup(popupElement) {
-  popupElement.classList.add("popup_is-opened");
-}
-
-function closePopup(popupElement) {
-  popupElement.classList.remove("popup_is-opened");
-}
 
 function handleEditProfileOpen() {
   nameInput.value = profileTitle.textContent;
   descriptionInput.value = profileDescription.textContent;
-  openPopup(editProfilePopup);
+  openModal(editProfilePopup);
 }
 
 function handleEditProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = descriptionInput.value;
-  closePopup(editProfilePopup);
+  closeModal(editProfilePopup);
+}
+
+function handleAddCardOpen() {
+  newCardForm.reset();
+  openModal(newCardPopup);
+}
+
+function handleCardFormSubmit(evt) {
+  evt.preventDefault();
+  renderCard(cardNameInput.value, cardLinkInput.value, cardsList);
+  closeModal(newCardPopup);
 }
 
 editProfileButton.addEventListener("click", handleEditProfileOpen);
 editProfileCloseButton.addEventListener("click", () =>
-  closePopup(editProfilePopup),
+  closeModal(editProfilePopup),
 );
 editProfileForm.addEventListener("submit", handleEditProfileFormSubmit);
+
+addCardButton.addEventListener("click", handleAddCardOpen);
+newCardCloseButton.addEventListener("click", () => closeModal(newCardPopup));
+newCardForm.addEventListener("submit", handleCardFormSubmit);
+
+imagePopupCloseButton.addEventListener("click", () => closeModal(imagePopup));
