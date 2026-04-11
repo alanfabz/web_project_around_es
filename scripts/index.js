@@ -53,16 +53,27 @@ const profileDescription = document.querySelector(".profile__description");
 const imagePopupImage = imagePopup.querySelector(".popup__image");
 const imagePopupCaption = imagePopup.querySelector(".popup__caption");
 
-function openModal(modalElement) {
-  modalElement.classList.add("popup_is-opened");
+function handleEscClose(evt) {
+  if (evt.key !== "Escape") {
+    return;
+  }
+
+  const openedPopup = document.querySelector(".popup_is-opened");
+  if (!openedPopup) {
+    return;
+  }
+
+  closePopup(openedPopup);
 }
 
-function closeModal(modalElement) {
-  modalElement.classList.remove("popup_is-opened");
+function openPopup(popupElement) {
+  popupElement.classList.add("popup_is-opened");
+  document.addEventListener("keydown", handleEscClose);
 }
 
-function handleLikeButtonClick(evt) {
-  evt.target.classList.toggle("card__like-button_is-active");
+function closePopup(popupElement) {
+  popupElement.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", handleEscClose);
 }
 
 function handleDeleteButtonClick(cardElement) {
@@ -73,13 +84,13 @@ function handleCardImageClick(name, link) {
   imagePopupCaption.textContent = name;
   imagePopupImage.src = link;
   imagePopupImage.alt = name;
-  openModal(imagePopup);
+  openPopup(imagePopup);
 }
 
-function getCardElement(
+function createCardElement({
   name = "Sin título",
   link = "./images/placeholder.jpg",
-) {
+} = {}) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardTitle = cardElement.querySelector(".card__title");
   const cardImage = cardElement.querySelector(".card__image");
@@ -90,17 +101,19 @@ function getCardElement(
   cardImage.src = link;
   cardImage.alt = name;
 
-  likeButton.addEventListener("click", handleLikeButtonClick);
-  deleteButton.addEventListener("click", () =>
-    handleDeleteButtonClick(cardElement),
-  );
+  likeButton.addEventListener("click", () => {
+    likeButton.classList.toggle("card__like-button_is-active");
+  });
+  deleteButton.addEventListener("click", () => {
+    handleDeleteButtonClick(cardElement);
+  });
   cardImage.addEventListener("click", () => handleCardImageClick(name, link));
 
   return cardElement;
 }
 
 function renderCard(name, link, container) {
-  const cardElement = getCardElement(name, link);
+  const cardElement = createCardElement({ name, link });
   container.prepend(cardElement);
 }
 
@@ -111,35 +124,45 @@ initialCards.forEach((cardData) => {
 function handleEditProfileOpen() {
   nameInput.value = profileTitle.textContent;
   descriptionInput.value = profileDescription.textContent;
-  openModal(editProfilePopup);
+  openPopup(editProfilePopup);
 }
 
 function handleEditProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = descriptionInput.value;
-  closeModal(editProfilePopup);
+  closePopup(editProfilePopup);
 }
 
 function handleAddCardOpen() {
   newCardForm.reset();
-  openModal(newCardPopup);
+  openPopup(newCardPopup);
 }
 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
   renderCard(cardNameInput.value, cardLinkInput.value, cardsList);
-  closeModal(newCardPopup);
+  closePopup(newCardPopup);
 }
 
 editProfileButton.addEventListener("click", handleEditProfileOpen);
 editProfileCloseButton.addEventListener("click", () =>
-  closeModal(editProfilePopup),
+  closePopup(editProfilePopup),
 );
 editProfileForm.addEventListener("submit", handleEditProfileFormSubmit);
 
 addCardButton.addEventListener("click", handleAddCardOpen);
-newCardCloseButton.addEventListener("click", () => closeModal(newCardPopup));
+newCardCloseButton.addEventListener("click", () => closePopup(newCardPopup));
 newCardForm.addEventListener("submit", handleCardFormSubmit);
 
-imagePopupCloseButton.addEventListener("click", () => closeModal(imagePopup));
+imagePopupCloseButton.addEventListener("click", () => closePopup(imagePopup));
+
+function handleOverlayClick(evt) {
+  if (evt.target.classList.contains("popup")) {
+    closePopup(evt.target);
+  }
+}
+
+editProfilePopup.addEventListener("click", handleOverlayClick);
+newCardPopup.addEventListener("click", handleOverlayClick);
+imagePopup.addEventListener("click", handleOverlayClick);
