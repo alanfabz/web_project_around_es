@@ -88,8 +88,9 @@ El render inicial se hace:
 
 Además:
 
-- `getCardElement()` utiliza parámetros predeterminados para tolerar datos incompletos.
-- Los listeners de like/eliminar/abrir imagen se asignan al crear cada tarjeta.
+- `createCardElement()` utiliza parámetros predeterminados para tolerar datos incompletos.
+- Los listeners de like/eliminar/abrir imagen se asignan al crear cada tarjeta (vía `addEventListener`).
+- Los modales se abren/cierran con funciones reutilizables (`openPopup` / `closePopup`) y pueden cerrarse con Escape o click en el overlay.
 
 ## Roadmap (siguientes mejoras)
 
