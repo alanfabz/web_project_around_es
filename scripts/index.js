@@ -63,16 +63,16 @@ function handleEscClose(evt) {
     return;
   }
 
-  closePopup(openedPopup);
+  closeModal(openedPopup);
 }
 
-function openPopup(popupElement) {
-  popupElement.classList.add("popup_is-opened");
+function openModal(modalElement) {
+  modalElement.classList.add("popup_is-opened");
   document.addEventListener("keydown", handleEscClose);
 }
 
-function closePopup(popupElement) {
-  popupElement.classList.remove("popup_is-opened");
+function closeModal(modalElement) {
+  modalElement.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", handleEscClose);
 }
 
@@ -84,13 +84,10 @@ function handleCardImageClick(name, link) {
   imagePopupCaption.textContent = name;
   imagePopupImage.src = link;
   imagePopupImage.alt = name;
-  openPopup(imagePopup);
+  openModal(imagePopup);
 }
 
-function createCardElement({
-  name = "Sin título",
-  link = "./images/placeholder.jpg",
-} = {}) {
+function getCardElement(name = "Sin título", link = "./images/placeholder.jpg") {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const cardTitle = cardElement.querySelector(".card__title");
   const cardImage = cardElement.querySelector(".card__image");
@@ -104,16 +101,14 @@ function createCardElement({
   likeButton.addEventListener("click", () => {
     likeButton.classList.toggle("card__like-button_is-active");
   });
-  deleteButton.addEventListener("click", () => {
-    handleDeleteButtonClick(cardElement);
-  });
+  deleteButton.addEventListener("click", () => handleDeleteButtonClick(cardElement));
   cardImage.addEventListener("click", () => handleCardImageClick(name, link));
 
   return cardElement;
 }
 
 function renderCard(name, link, container) {
-  const cardElement = createCardElement({ name, link });
+  const cardElement = getCardElement(name, link);
   container.prepend(cardElement);
 }
 
@@ -124,42 +119,40 @@ initialCards.forEach((cardData) => {
 function handleEditProfileOpen() {
   nameInput.value = profileTitle.textContent;
   descriptionInput.value = profileDescription.textContent;
-  openPopup(editProfilePopup);
+  openModal(editProfilePopup);
 }
 
 function handleEditProfileFormSubmit(evt) {
   evt.preventDefault();
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = descriptionInput.value;
-  closePopup(editProfilePopup);
+  closeModal(editProfilePopup);
 }
 
 function handleAddCardOpen() {
   newCardForm.reset();
-  openPopup(newCardPopup);
+  openModal(newCardPopup);
 }
 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
   renderCard(cardNameInput.value, cardLinkInput.value, cardsList);
-  closePopup(newCardPopup);
+  closeModal(newCardPopup);
 }
 
 editProfileButton.addEventListener("click", handleEditProfileOpen);
-editProfileCloseButton.addEventListener("click", () =>
-  closePopup(editProfilePopup),
-);
+editProfileCloseButton.addEventListener("click", () => closeModal(editProfilePopup));
 editProfileForm.addEventListener("submit", handleEditProfileFormSubmit);
 
 addCardButton.addEventListener("click", handleAddCardOpen);
-newCardCloseButton.addEventListener("click", () => closePopup(newCardPopup));
+newCardCloseButton.addEventListener("click", () => closeModal(newCardPopup));
 newCardForm.addEventListener("submit", handleCardFormSubmit);
 
-imagePopupCloseButton.addEventListener("click", () => closePopup(imagePopup));
+imagePopupCloseButton.addEventListener("click", () => closeModal(imagePopup));
 
 function handleOverlayClick(evt) {
   if (evt.target.classList.contains("popup")) {
-    closePopup(evt.target);
+    closeModal(evt.target);
   }
 }
 
